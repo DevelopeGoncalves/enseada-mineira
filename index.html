@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enseada Mineira - Monte seu Pedido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos Globais e Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Cores da Logo Enseada Mineira */
+        :root {
+            --primary-orange: #ff8c42; /* Laranja vibrante */
+            --secondary-orange: #ff6b1a; /* Laranja mais escuro */
+            --accent-yellow: #ffd166; /* Amarelo dourado */
+            --brown-dark: #7d3c1c; /* Marrom da borda */
+            --brown-medium: #a0522d; /* Marrom médio */
+            --teal-accent: #4a9b8e; /* Verde-azulado dos arbustos */
+            --cream-light: #fff8e7; /* Creme claro */
+            --text-dark: #3d2817; /* Texto escuro marrom */
+            --whatsapp-green: #25D366;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--primary-orange) 50%, var(--secondary-orange) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .phone-container {
+            max-width: 420px;
+            width: 100%;
+            background: var(--cream-light);
+            border-radius: 35px;
+            box-shadow: 0 10px 40px rgba(125, 60, 28, 0.3), 0 0 0 4px var(--brown-dark);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header e Título */
+        header {
+            padding: 25px 20px;
+            text-align: center;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--primary-orange) 100%);
+            border-bottom: 3px solid var(--brown-dark);
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--brown-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            box-shadow: 0 5px 15px rgba(125, 60, 28, 0.4);
+        }
+
+        .logo-icon span {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--cream-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 0.9em;
+            color: var(--text-dark);
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        /* Conteúdo Principal */
+        .content {
+            padding: 20px;
+            background: var(--cream-light);
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: var(--brown-dark);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-orange);
+            font-weight: 600;
+        }
+        
+        .section-title.beverage-title {
+            border-bottom: 2px solid var(--teal-accent);
+        }
+
+        /* Cartões de Tamanho */
+        .size-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .size-card, .delivery-card { /* Adicionado .delivery-card */
+            background: white;
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid var(--primary-orange);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .size-card:hover, .delivery-card:hover { /* Adicionado .delivery-card */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 140, 66, 0.3);
+        }
+
+        .size-card.selected, .delivery-card.selected { /* Adicionado .delivery-card */
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            border-color: var(--brown-dark);
+            color: white;
+            box-shadow: 0 8px 25px rgba(125, 60, 28, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .delivery-card.selected {
+            /* Use um gradiente ligeiramente diferente para diferenciar, mas mantenha o estilo */
+            background: linear-gradient(135deg, #1e90ff 0%, #007bff 100%);
+        }
+
+        .size-card h3, .delivery-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .size-card .price, .delivery-card .price {
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Item de Opção/Toggle */
+        .toggle-option {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--accent-yellow);
+            cursor: pointer;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .toggle-option:hover {
+            border-color: var(--primary-orange);
+            box-shadow: 0 4px 12px rgba(255, 140, 66, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .toggle-option.selected {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            border-color: var(--brown-dark);
+            box-shadow: 0 4px 15px rgba(255, 107, 26, 0.4);
+            color: white;
+        }
+        
+        .toggle-option[data-type="bebida"].selected {
+            background: linear-gradient(135deg, var(--teal-accent) 0%, #3d8b7f 100%);
+            border-color: var(--brown-dark);
+        }
+
+        .toggle-switch {
+            width: 30px;
+            height: 18px;
+            background: #ddd;
+            border-radius: 9px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-option.selected .toggle-switch {
+            background: var(--brown-dark);
+        }
+
+        .toggle-option.selected .toggle-switch::before {
+            transform: translateX(12px);
+        }
+        
+        .extra-price {
+            font-size: 0.85em;
+            color: var(--brown-medium);
+            margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .toggle-option.selected .extra-price {
+            color: var(--accent-yellow);
+            font-weight: 700;
+        }
+        
+        /* Resumo do Pedido */
+        .summary {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 25px;
+            border: 3px solid var(--primary-orange);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary h3 {
+            color: var(--brown-dark);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-orange);
+            font-weight: 700;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            color: var(--text-dark);
+            border-bottom: 1px dashed rgba(125, 60, 28, 0.2);
+            font-size: 0.9em;
+        }
+        
+        .summary-item:last-of-type {
+            border-bottom: none;
+        }
+        
+        .summary-item .price-detail {
+            color: var(--secondary-orange);
+            font-weight: 600;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0 0;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-shadow: 1px 1px 2px rgba(255, 140, 66, 0.3);
+        }
+        
+        .summary-payment-btn {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .payment-button {
+            flex-grow: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .payment-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .payment-button.picpay {
+            background-color: #21c25e;
+            color: white;
+        }
+        
+        .payment-button.pix {
+            background-color: var(--teal-accent);
+            color: white;
+        }
+
+        /* Botão WhatsApp */
+        .btn-whatsapp {
+            background: var(--whatsapp-green);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border-radius: 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3);
+            font-weight: 700;
+        }
+
+        .btn-whatsapp:hover:not(:disabled) {
+            background: #128C7E;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp:disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Alertas/Mensagens */
+        .alert-message {
+            background: linear-gradient(135deg, var(--secondary-orange) 0%, #ff4500 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid var(--brown-dark);
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(255, 69, 0, 0.3);
+        }
+        /* Adicione este bloco dentro da sua tag <style> */
+        .logo-image {
+            max-width: 100%; /* Garante que a imagem não ultrapasse o container */
+            max-height: 100%;
+            border-radius: 50%; /* Mantém o formato circular do container pai */
+            display: block; /* Remove possíveis espaços em branco abaixo da imagem */
+            /* Você pode ajustar o padding/tamanho do .logo-icon se precisar de mais espaço */
+            padding: 2px; /* Adiciona um pequeno respiro dentro da borda */
+        }
+
+        /* Removemos a formatação do span que não será mais usado */
+        .logo-icon span {
+            /* Estas regras não serão mais necessárias, mas mantê-las não causa erro */
+            /* font-size: 36px; */
+            /* font-weight: 700; */
+            /* color: var(--cream-light); */
+            /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
+        }
+
+        /* NOVO ESTILO NECESSÁRIO PARA O INPUT DE ENDEREÇO */
+        .address-input-group {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .address-input-group label {
+            display: block;
+            font-size: 0.9em;
+            color: var(--brown-dark);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .address-input-group input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--accent-yellow);
+            border-radius: 5px;
+            font-size: 1em;
+            color: var(--text-dark);
+        }
+        
+
+        /* Responsividade */
+        @media (max-width: 450px) {
+            .phone-container {
+                border-radius: 0;
+            }
+            body {
+                padding: 0;
+                background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--primary-orange) 100%);
+            }
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+         <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="img/logo.png" alt="Logo Enseada Mineira" class="logo-image">
+                </div>
+                <h1>ENSEADA MINEIRA</h1>
+                <p class="subtitle" style="font-size: 0.8em; color: var(--brown-dark);">MARMITARIA</p>
+         </div>
+             <p class="subtitle">Monte sua marmita do seu jeito! 🍽️</p>
+         </header>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">☑️ Escolha o Tamanho</h2>
+                <div class="size-cards-grid">
+                    <div class="size-card" data-size="pequena" data-price="15.00" onclick="selectSize(this)">
+                        <h3>Pequena</h3>
+                        <p class="price">R$ 15,00</p>
+                        <p style="font-size: 0.8em;">(Máx. 1 Carne)</p>
+                    </div>
+                    <div class="size-card" data-size="grande" data-price="18.00" onclick="selectSize(this)">
+                        <h3>Grande</h3>
+                        <p class="price">R$ 18,00</p>
+                        <p style="font-size: 0.8em;">(Máx. 2 Carnes)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-message" id="size-warning" style="display: none;">
+                ⚠️ Por favor, escolha o tamanho da marmita primeiro.
+            </div>
+
+            <div class="section" id="carnes-section">
+                <h2 class="section-title">🍖 Carnes <span id="carne-limit" style="font-size: 0.8em; color: var(--secondary-orange);"></span></h2>
+                <div class="menu-grid">
+                    <div class="toggle-option" data-type="carne" data-value="frango com quiabo">
+                        <span>Frango com Quiabo</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="carne" data-value="suíno acebolado">
+                        <span>Suíno Acebolado</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="carne" data-value="frango empanado">
+                        <span>Frango Empanado</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="carne" data-value="frango grelhado">
+                        <span>Frango Grelhado</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🍚 Guarnições</h2>
+                <div class="menu-grid">
+                    <div class="toggle-option" data-type="guarnicao" data-value="Arroz Branco">
+                        <span>Arroz Branco</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="guarnicao" data-value="Feijão Caldo">
+                        <span>Feijão Caldo</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="guarnicao" data-value="Feijao Tropeiro">
+                        <span>Feijão Tropeiro</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="guarnicao" data-value="Macarrão">
+                        <span>Macarrão</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🥗 Acompanhamentos</h2>
+                <div class="menu-grid">
+                    <div class="toggle-option" data-type="guarnicao" data-value="tomate com cebola ">
+                        <span>Tomate com Cebola </span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="salada" data-value="repolho com tomate">
+                        <span>Repolho com Tomate</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="salada" data-value="macarronese">
+                        <span>Macarronese</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="acompanhamento" data-value="Ovos Fritos (+R$ 2,00)" data-extra-price="2.00">
+                        <span>Ovos Fritos</span>
+                        <span class="extra-price">+R$ 2,00</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">🥗 Saladas</h2>
+                <div class="menu-grid">
+                    <div class="toggle-option" data-type="salada" data-value="Alface">
+                        <span>Alface</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="salada" data-value="Tomate">
+                        <span>Tomate</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="salada" data-value="Cenoura">
+                        <span>Cenoura</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="salada" data-value="salada cozida">
+                        <span>Salada Cozida</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title beverage-title">🥤 Bebidas Geladas</h2>
+                <div class="menu-grid">
+                    <div class="toggle-option" data-type="bebida" data-value="Suco Natural (+R$ 7,00)" data-extra-price="7.00">
+                        <span>Suco Natural</span>
+                        <span class="extra-price">+R$ 7,00</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="bebida" data-value="Refrigerante Lata (+R$ 5,00)" data-extra-price="5.00">
+                        <span>Refri Lata</span>
+                        <span class="extra-price">+R$ 5,00</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="bebida" data-value="Refrigerante 1L (+R$ 10,00)" data-extra-price="10.00">
+                        <span>Refri 1 Litro</span>
+                        <span class="extra-price">+R$ 10,00</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                    <div class="toggle-option" data-type="bebida" data-value="Juninho (Guaraná) (+R$ 4,00)" data-extra-price="4.00">
+                        <span>Juninho</span>
+                        <span class="extra-price">+R$ 4,00</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title" style="border-bottom: 2px solid #007bff;">🚚 Forma de Recebimento</h2>
+                <div class="size-cards-grid">
+                    <div class="size-card delivery-card" data-type="delivery" data-value="Retirada na Loja" data-price="0.00" onclick="selectDelivery(this)">
+                        <h3>Retirar na Loja</h3>
+                        <p class="price">GRÁTIS</p>
+                    </div>
+                    <div class="size-card delivery-card" data-type="delivery" data-value="Entrega" data-price="5.00" onclick="selectDelivery(this)">
+                        <h3>Entrega</h3>
+                        <p class="price">+R$ 5,00</p>
+                    </div>
+                </div>
+                
+                <div class="address-input-group" id="address-group" style="display: none;">
+                    <label for="delivery-address">Rua, Número, Bairro, Ponto de Ref.:</label>
+                    <input type="text" id="delivery-address" placeholder="Ex: Rua A, 123, Centro (prox. Padaria)" oninput="updateAddress(this.value)">
+                </div>
+            </div>
+
+                        <div class="summary">
+                <h3>📋 Resumo do Pedido</h3>
+                <div id="summary-content">
+                    <p style="color: #999; text-align: center; font-style: italic; padding: 10px 0;">Selecione o tamanho e os itens para ver o resumo.</p>
+                </div>
+                
+                <div class="summary-total" style="display: none;" id="total-section">
+                    <span>TOTAL:</span>
+                    <span id="total-price-display">R$ 0,00</span>
+                </div>
+                
+                <div class="summary-payment-btn">
+                    <a href="https://picpay.me/" target="_blank" class="payment-button picpay">
+                        💚 PicPay
+                    </a>
+                    <a href="#" class="payment-button pix" onclick="alert('Chave PIX: 27997924966 - Nome: Jared Silva. Por favor, envie o comprovante no WhatsApp!')">
+                        💳 PIX
+                    </a>
+                </div>
+            </div>
+
+            <button class="btn-whatsapp" onclick="sendWhatsApp()" id="whatsappBtn" disabled>
+                <span style="font-size: 24px;">📱</span>
+                Finalizar Pedido pelo WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let order = {
+            size: null,
+            basePrice: 0.00,
+            maxCarnes: 0,
+            deliveryOption: null, // NOVO
+            deliveryCost: 0.00,  // NOVO
+            deliveryAddress: '', // NOVO
+            carnes: [],
+            guarnicoes: [],
+            acompanhamentos: [],
+            saladas: [],
+            bebidas: [],
+            totalPrice: 0.00
+        };
+        
+        const SIZE_WARNING = document.getElementById('size-warning');
+        const CARNE_LIMIT = document.getElementById('carne-limit');
+        const SUMMARY_CONTENT = document.getElementById('summary-content');
+        const TOTAL_SECTION = document.getElementById('total-section');
+        const TOTAL_PRICE_DISPLAY = document.getElementById('total-price-display');
+        const WHATSAPP_BTN = document.getElementById('whatsappBtn');
+        const ADDRESS_GROUP = document.getElementById('address-group'); // NOVO
+        const ADDRESS_INPUT = document.getElementById('delivery-address'); // NOVO
+
+        
+        // --- NOVO: Funções de Lógica de Entrega ---
+
+        function selectDelivery(element) {
+            const option = element.getAttribute('data-value');
+            const cost = parseFloat(element.getAttribute('data-price'));
+            
+            // Remove a seleção de todos os cartões de entrega
+            document.querySelectorAll('.delivery-card').forEach(card => card.classList.remove('selected'));
+            
+            // Aplica a seleção no novo cartão
+            element.classList.add('selected');
+            
+            // Atualiza o objeto do pedido
+            order.deliveryOption = option;
+            order.deliveryCost = cost;
+            
+            // Mostra ou esconde o campo de endereço
+            if (option === 'Entrega') {
+                ADDRESS_GROUP.style.display = 'block';
+            } else {
+                ADDRESS_GROUP.style.display = 'none';
+                order.deliveryAddress = ''; // Limpa o endereço se mudar para retirada
+                ADDRESS_INPUT.value = ''; // Limpa o campo de input
+            }
+            
+            updateSummary();
+        }
+
+        function updateAddress(value) {
+            order.deliveryAddress = value;
+            updateSummary();
+        }
+
+        // --- Funções de Lógica (Adaptadas) ---
+        
+        function selectSize(element) {
+            const newSize = element.getAttribute('data-size');
+            const newPrice = parseFloat(element.getAttribute('data-price'));
+            
+            // Remove a seleção de todos os cartões
+            document.querySelectorAll('.size-card:not(.delivery-card)').forEach(card => card.classList.remove('selected'));
+            
+            // Aplica a seleção no novo cartão
+            element.classList.add('selected');
+            
+            // Atualiza o objeto do pedido
+            order.size = newSize;
+            order.basePrice = newPrice;
+            order.maxCarnes = newSize === 'grande' ? 2 : 1;
+            
+            // Lógica de reset de carnes (mantida)
+            if (order.carnes.length > order.maxCarnes) {
+                const carneOptions = document.querySelectorAll('#carnes-section .toggle-option');
+                carneOptions.forEach((item, index) => {
+                    const value = item.getAttribute('data-value');
+                    if (!order.carnes.slice(0, order.maxCarnes).includes(value)) {
+                        item.classList.remove('selected');
+                    }
+                });
+                order.carnes = order.carnes.slice(0, order.maxCarnes);
+            }
+
+            SIZE_WARNING.style.display = 'none';
+            updateSummary();
+        }
+        
+        function toggleOption(element) {
+            const type = element.getAttribute('data-type');
+            const value = element.getAttribute('data-value');
+            const isSelected = element.classList.contains('selected');
+            
+            // Bloquear seleção de carne se o tamanho não estiver definido
+            if (type === 'carne' && !order.size) {
+                SIZE_WARNING.style.display = 'block';
+                return;
+            }
+            
+            if (isSelected) {
+                // Desmarcar
+                element.classList.remove('selected');
+                if (order[type + 's']) {
+                    order[type + 's'] = order[type + 's'].filter(item => item !== value);
+                }
+            } else {
+                // Marcar
+                if (type === 'carne') {
+                    if (order.carnes.length >= order.maxCarnes) {
+                        alert(`Você já selecionou o máximo de ${order.maxCarnes} carne(s) para o tamanho ${order.size.toUpperCase()}!`);
+                        return; // Impede a seleção
+                    }
+                }
+                
+                element.classList.add('selected');
+                if (order[type + 's']) {
+                    order[type + 's'].push(value);
+                }
+            }
+            
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            // 1. Atualiza o limite de carnes exibido
+            CARNE_LIMIT.textContent = order.size ? `(Máx. ${order.maxCarnes} selecionada${order.maxCarnes > 1 ? 's' : ''})` : '';
+
+            // 2. Calcula o Preço Total
+            let total = order.basePrice + order.deliveryCost; // Adiciona o custo de entrega
+            let summaryHTML = '';
+            
+            // NOVO: Adiciona Opção de Recebimento
+            if (order.deliveryOption) {
+                summaryHTML += `<div class="summary-item" style="font-weight: 600;"><span>🚚 ${order.deliveryOption}:</span><span class="price-detail">${order.deliveryCost > 0 ? `+R$ ${order.deliveryCost.toFixed(2).replace('.', ',')}` : 'Grátis'}</span></div>`;
+            }
+
+            // NOVO: Adiciona Endereço (se for entrega)
+            const needsAddress = order.deliveryOption === 'Entrega' && !order.deliveryAddress.trim();
+            
+            if (order.deliveryOption === 'Entrega' && order.deliveryAddress.trim()) {
+                summaryHTML += `<div class="summary-item" style="padding-left: 15px; font-size: 0.8em; border-bottom: 1px solid #eee;"><span>Endereço:</span><span style="max-width: 50%; text-align: right;">${order.deliveryAddress}</span></div>`;
+            } else if (order.deliveryOption === 'Entrega') {
+                summaryHTML += `<div class="summary-item" style="padding-left: 15px; font-size: 0.8em; border-bottom: 1px solid #eee; color: red;"><span>Endereço:</span><span style="max-width: 50%; text-align: right;">*FALTANDO INFORMAR*</span></div>`;
+            }
+            
+            // Adiciona o valor base/tamanho
+            if (order.size) {
+                summaryHTML += `<div class="summary-item" style="margin-top: 10px;"><span>Tamanho ${order.size.charAt(0).toUpperCase() + order.size.slice(1)}</span><span class="price-detail">R$ ${order.basePrice.toFixed(2).replace('.', ',')}</span></div>`;
+            }
+            
+            // 3. Monta a lista de itens e soma adicionais
+            
+            // Carnes
+            if (order.carnes.length > 0) {
+                summaryHTML += `<div class="summary-item"><span>🥩 Carnes (${order.carnes.length}/${order.maxCarnes}):</span><span>${order.carnes.join(', ')}</span></div>`;
+            }
+
+            // Guarnições e Saladas (não tem custo extra neste exemplo, apenas listados)
+            if (order.guarnicoes.length > 0) {
+                summaryHTML += `<div class="summary-item"><span>🍚 Guarnições:</span><span>${order.guarnicoes.join(', ')}</span></div>`;
+            }
+            if (order.saladas.length > 0) {
+                summaryHTML += `<div class="summary-item"><span>🥗 Saladas:</span><span>${order.saladas.join(', ')}</span></div>`;
+            }
+            
+            // Acompanhamentos (com custo extra)
+            const addons = [];
+            document.querySelectorAll('.toggle-option.selected[data-type="acompanhamento"]').forEach(item => {
+                const value = item.getAttribute('data-value').replace(/\s\(\+.+\)/, ''); // Remove o preço do nome
+                const price = parseFloat(item.getAttribute('data-extra-price'));
+                addons.push({ name: value, price: price });
+                total += price;
+            });
+            
+            if (addons.length > 0) {
+                summaryHTML += `<div class="summary-item" style="padding-top: 10px;"><span>Extras (Acompanhamentos):</span><span></span></div>`;
+                addons.forEach(addon => {
+                    summaryHTML += `<div class="summary-item" style="padding-left: 15px;"><span>- ${addon.name}</span><span class="price-detail">+R$ ${addon.price.toFixed(2).replace('.', ',')}</span></div>`;
+                });
+            }
+
+            // Bebidas (com custo extra)
+            const drinks = [];
+            document.querySelectorAll('.toggle-option.selected[data-type="bebida"]').forEach(item => {
+                const value = item.getAttribute('data-value').replace(/\s\(\+.+\)/, ''); // Remove o preço do nome
+                const price = parseFloat(item.getAttribute('data-extra-price'));
+                drinks.push({ name: value, price: price });
+                total += price;
+            });
+            
+            if (drinks.length > 0) {
+                summaryHTML += `<div class="summary-item" style="padding-top: 10px;"><span>🥤 Bebidas:</span><span></span></div>`;
+                drinks.forEach(drink => {
+                    summaryHTML += `<div class="summary-item" style="padding-left: 15px;"><span>- ${drink.name}</span><span class="price-detail">+R$ ${drink.price.toFixed(2).replace('.', ',')}</span></div>`;
+                });
+            }
+            
+            // 4. Atualiza o objeto e a interface
+            order.totalPrice = total;
+
+            const hasMinimumRequirements = order.size && order.carnes.length > 0 && order.deliveryOption;
+            
+            if (order.deliveryOption && order.size) {
+                SUMMARY_CONTENT.innerHTML = summaryHTML;
+                TOTAL_PRICE_DISPLAY.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+                TOTAL_SECTION.style.display = 'flex';
+                
+                // Lógica de habilitação do botão
+                WHATSAPP_BTN.disabled = !hasMinimumRequirements || needsAddress;
+                if (WHATSAPP_BTN.disabled && needsAddress) {
+                    WHATSAPP_BTN.textContent = '❌ Informe o endereço para Entrega';
+                } else if (WHATSAPP_BTN.disabled) {
+                    WHATSAPP_BTN.textContent = '❌ Selecione Tamanho, Entrega e Carne';
+                } else {
+                    WHATSAPP_BTN.innerHTML = '<span style="font-size: 24px;">📱</span> Finalizar Pedido pelo WhatsApp';
+                }
+
+            } else {
+                SUMMARY_CONTENT.innerHTML = '<p style="color: #999; text-align: center; font-style: italic; padding: 10px 0;">Selecione o tamanho e os itens para ver o resumo.</p>';
+                TOTAL_SECTION.style.display = 'none';
+                WHATSAPP_BTN.disabled = true;
+                WHATSAPP_BTN.innerHTML = '<span style="font-size: 24px;">📱</span> Finalizar Pedido pelo WhatsApp';
+            }
+        }
+
+        // --- Função WhatsApp (Adaptada) ---
+
+        function sendWhatsApp() {
+            const needsAddress = order.deliveryOption === 'Entrega' && !order.deliveryAddress.trim();
+
+            if (!order.size || order.carnes.length === 0 || !order.deliveryOption || needsAddress) {
+                alert('⚠️ Por favor, certifique-se de que selecionou o tamanho, a forma de recebimento, o endereço (se for entrega) e pelo menos uma carne.');
+                return;
+            }
+
+            let message = `🍽️ *PEDIDO MARMITARIA - ENSEADA MINEIRA* 🍽️\n\n`;
+            
+            // Entrega/Retirada
+            message += `🚚 *Recebimento:* ${order.deliveryOption}`;
+            if (order.deliveryCost > 0) {
+                message += ` (+R$ ${order.deliveryCost.toFixed(2).replace('.', ',')})`;
+            }
+            message += `\n`;
+
+            // Endereço
+            if (order.deliveryOption === 'Entrega' && order.deliveryAddress.trim()) {
+                message += `📍 *Endereço:* ${order.deliveryAddress.trim()}\n`;
+            }
+            
+            message += `\n📦 *Tamanho:* ${order.size.charAt(0).toUpperCase() + order.size.slice(1)} (R$ ${order.basePrice.toFixed(2).replace('.', ',')})\n\n`;
+            
+            message += `_Opções Selecionadas:_\n`;
+            
+            // Carnes
+            if (order.carnes.length > 0) {
+                message += `🍖 *Carnes (${order.carnes.length}/${order.maxCarnes}):*\n${order.carnes.map(c => `• ${c}`).join('\n')}\n`;
+            }
+            
+            // Guarnições
+            if (order.guarnicoes.length > 0) {
+                message += `\n🍚 *Guarnições:*\n${order.guarnicoes.map(g => `• ${g}`).join('\n')}\n`;
+            }
+
+            // Saladas
+            if (order.saladas.length > 0) {
+                message += `\n🥗 *Saladas:*\n${order.saladas.map(s => `• ${s.replace(/\s\(\+.+\)/, '')}`).join('\n')}\n`;
+            }
+            
+            // Acompanhamentos/Extras (só os que têm preço)
+            const addons = [];
+            document.querySelectorAll('.toggle-option.selected[data-type="acompanhamento"]').forEach(item => {
+                addons.push(item.getAttribute('data-value'));
+            });
+
+            if (addons.length > 0) {
+                message += `\n🍟 *Extras (Acompanhamentos):*\n${addons.map(a => `• ${a}`).join('\n')}\n`;
+            }
+            
+            // Bebidas
+            const drinks = [];
+            document.querySelectorAll('.toggle-option.selected[data-type="bebida"]').forEach(item => {
+                drinks.push(item.getAttribute('data-value'));
+            });
+            
+            if (drinks.length > 0) {
+                message += `\n🥤 *Bebidas:*\n${drinks.map(d => `• ${d}`).join('\n')}\n`;
+            }
+
+            // Total
+            message += `\n---`;
+            message += `\n*TOTAL DO PEDIDO: R$ ${order.totalPrice.toFixed(2).replace('.', ',')}*\n`;
+            message += `---\n\n`;
+
+            message += `💳 *Pagamento:*\n`;
+            message += `Por favor, pague por PIX ou PicPay e envie o comprovante.`;
+            
+            const whatsappNumber = "5527992745611"; // Exemplo: 55 DDD NÚMERO
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Adiciona a funcionalidade de clique em todos os "toggle-option"
+        document.querySelectorAll('.toggle-option').forEach(item => {
+            item.onclick = (e) => toggleOption(item);
+        });
+        
+        // Inicializa o resumo ao carregar a página
+        document.addEventListener('DOMContentLoaded', updateSummary);
+    </script>
+</body>
+</html>
+
